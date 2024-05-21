@@ -27,7 +27,7 @@ public class distribuiçãoNormal {
 
     quebraDeLinha();
 
-    String resposta = teclado.nextInt();
+    int resposta = teclado.nextInt();
 
     // inserção de dados;
 
@@ -41,7 +41,7 @@ public class distribuiçãoNormal {
             // inserção dos dados e suas respectivas frequências;
             float [][] dadosAmostrais = new float[quantidadeDeDados][2];
             for (int i = 0; i < quantidadeDeDados; i++) {
-                for (j = 0; j < quantidadeDeDados; j++) {
+                for (int j = 0; j < quantidadeDeDados; j++) {
                    System.out.println("Digite o dado desejado: ");
                    float dado  = teclado.nextFloat();
                    dadosAmostrais = dado [i];
@@ -58,6 +58,7 @@ public class distribuiçãoNormal {
                     System.out.println("[" + dadosAmostrais[i][j] + "]");
                 }
             }
+            /*criar função para repetição do programa*/
             System.out.println("/n Responda [Y/N]: ");
             char respostaYN = teclado.next().charAt(0);
             dadosCorretos = (respostaYN == 'Y' || respostaYN == 'y'); 
@@ -128,5 +129,7 @@ public class distribuiçãoNormal {
     // cálculo do desvio padrão (s) = √s²
 
     // cálculo do coeficiente de variação = (100*s)/x̅;
+    
+    //Criar função e resolver a repetição do programa
 
 }
