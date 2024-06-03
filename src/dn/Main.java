@@ -1,4 +1,9 @@
-/**
+/** 
+ * @author Ruan Souza
+ * 
+ * @version 1.3
+ * 
+ * Inserção do cálculo de Z e aguardando a integração  com á tabela Z.
  * 
  */
 package dn;
@@ -6,13 +11,14 @@ package dn;
 import java.util.Scanner;
 import java.math.*;
 import java.text.DecimalFormat;
+import dn.zTable;
 
-/**
- * @author Arthur
- * @version 1.2
- *
- */
 public class Main {
+
+	static Scanner teclado = new Scanner(System.in);
+	static double xifi = 0, somaS2 = 0, media = 0, s2 = 0, s = 0, cv = 0, n = 0;
+	static DecimalFormat formatador = new DecimalFormat("0.00");//formatação de valores
+
 
 	public static void quebraDeLinha() {
 		System.out.println("");
@@ -42,9 +48,9 @@ public class Main {
 	 * 
 	 * @param matriz - uma matriz double que contém os valores de dados e FI
 	 */
+	
 	public static void calculoEstatistico(double[][] matriz) {
-		double xifi = 0, somaS2 = 0, media = 0, s2 = 0, s = 0, cv = 0;
-		int n = 0, i;
+		int i;
 		
 		for (i = 0; i < matriz.length; i++) {
 			n += matriz[i][1]; // calculando o valor de N
@@ -60,10 +66,14 @@ public class Main {
 		s = Math.sqrt(s2); //cálculo do desvio padrão
 		cv = (100 * s) / media; //cálculo do coeficiente de variação
 		
-		DecimalFormat formatador = new DecimalFormat("0.00");//formatação de valores
-
 		System.out.println("N = " + n +";\nMédia = " + formatador.format(media) + ";\nVariância(s2) = " +formatador.format(s2) +
-				";\nDesvio padrão = " + formatador.format(s) + ";\nCoeficiente de Variação (CV) = " + formatador.format(cv) + "%"); //impressão de todos os resultados
+				";\nDesvio padrão = " + formatador.format(s) + ";\nCoeficiente de Variação (CV) = " + formatador.format(cv) + "%"); //impressão de todos os resultados	
+	}
+	
+	
+	public static double calculoZ(double xi, double media, double n, double s) {
+		double Z = (xi - media) * Math.sqrt(n) / s;
+		return Z;
 	}
 
 	/** Método para imprimir qualquer matriz do programa
@@ -71,28 +81,28 @@ public class Main {
 	 * @param matriz - é uma matriz double que contém os valores dos dados e FI
 	 * @param qual - é um valor inteiro para decidir qual é o tipo da matriz
 	 */
+	
 	public static void imprimeMatriz(double[][] matriz, int qual) {
+		
 		/*
 		 * qual = 1 -> matriz de dados (xi)
 		 * qual = 2 -> matriz de classes
 		 */
+		
 		System.out.println("\n Os dados apresentados estão corretos? ");
 		switch (qual) { //switch para verificar o tipo da matriz
 		case 1:
-			//cabeçalho de impressão da matriz por dados(xi)
-			System.out.println("---DADOS(xi)---");
+			System.out.println("---DADOS(xi)---"); //cabeçalho de impressão da matriz por dados(xi)
 			System.out.println("XI\tFI"); 
 			break;
 		case 2:
-			//cabeçalho de impressão da matriz por dados(xi)
-			System.out.println("---CLASSES---");
+			System.out.println("---CLASSES---"); //cabeçalho de impressão da matriz por dados(xi)
 			System.out.println("li---ls\tPMI\tFI");
 			break;
 		}
 		for (int i = 0; i < matriz.length; i++) {
 			if (qual == 1) {
-				//se for matriz por dados (xi), imprime os valores de xi e fi
-				System.out.println("[" + matriz[i][0] + "]\t[" + matriz[i][1] + "]");
+				System.out.println("[" + matriz[i][0] + "]\t[" + matriz[i][1] + "]"); //se for matriz por dados (xi), imprime os valores de xi e fi
 			}
 			if (qual == 2) {
 				//se for matriz por classes, imprime os dois limites de cada classe, o PMI e o FI
@@ -107,7 +117,6 @@ public class Main {
 	// inferior e b = limite superior)), as outras classes e os PMIs);
 	public static void main(String[] args) {
 
-		Scanner teclado = new Scanner(System.in);
 
 		quebraDeLinha();
 		System.out.println(
@@ -135,7 +144,9 @@ public class Main {
 
 				System.out.print("\n Quantos dados deseja inserir: ");
 				int quantidadeDeDados = teclado.nextInt();
+				
 				// inserção dos dados e suas respectivas frequências;
+				
 				double[][] dadosAmostrais = new double[quantidadeDeDados][2];
 				for (int i = 0; i < dadosAmostrais.length; i++) {
 					System.out.print("\nDigite o valor do " + (i + 1) + "° dado: ");
@@ -146,7 +157,9 @@ public class Main {
 					dadosAmostrais[i][1] = freq;
 					quebraDeLinha();
 				}
+				
 				// mostrando os dados inseridos
+				
 				imprimeMatriz(dadosAmostrais, 1);
 
 				System.out.print("\n Responda 1 para corrigir ou qualquer tecla para prosseguir: ");
@@ -157,13 +170,7 @@ public class Main {
 
 		case 2:
 
-			System.out.println("\n Para inserir classes, digite [1];");
-			System.out.println("\n Para inserir PMIs (pontos médios) digite [2];");
 			quebraDeLinha();
-			System.out.print("Opção: ");
-			int dadosOuClasses = teclado.nextInt();
-			switch (dadosOuClasses) {
-			case 1:
 				do {
 					System.out.print("\nQuantas classes deseja inserir?:  ");
 					int quantidadeDeClasses = teclado.nextInt();
@@ -181,30 +188,49 @@ public class Main {
 						classes[i][1] = freq;
 						quebraDeLinha();
 					}
+					
 					// mostrando os dados inseridos
+					
 					imprimeMatriz(classes, 2);
 
 					System.out.print("\nResponda 1 para corrigir ou qualquer tecla para prosseguir: ");
 					resp = teclado.next().charAt(0);
 				} while (resp == '1');
 
-				break;
-
-			case 2:
-
-				break;
-
-			default:
-				System.out.println("Valor não encontrado no menu.");
-
-			}
-
-			// calcular amplitude e ponto médio da classe
-
 			break;
 
 		default:
 			System.out.println("Valor não encontrado no menu.");
+		}
+		
+		/** 
+		 * Área direcionada para o cálculo do valor de Z, antes do mesmo ser puxado da tabela Z.
+		 * 
+		 */
+		
+		quebraDeLinha();
+
+		System.out.println("Cálculo da distribuição Normal: ");
+		
+		quebraDeLinha();
+		
+		System.out.println("Digite o valor de A: ");
+		double a = teclado.nextDouble();
+		
+		double zA = calculoZ(a, media, n , s);
+		
+		System.out.println("\nDigite [1] para inserir o valor de B, se desejar um intervalo, ou qualquer número para continuar: ");
+		int x = teclado.nextInt();
+		
+		System.out.println("Valor de Z: " + formatador.format(zA));
+		
+		if(x == 1) {
+			System.out.println("Digite o valor de B: ");
+			double b = teclado.nextDouble();
+			
+			double zB = calculoZ(b, media, n , s);
+			
+			System.out.println("Valor de Z: " + formatador.format(zB));
 
 		}
 		teclado.close();
@@ -224,3 +250,5 @@ public class Main {
 // cálculo do coeficiente de variação = (100*s)/x̅;
 
 // Criar função e resolver a repetição do programa
+
+// Cálculo de Z -> Z = ((xi - media) * raiz(n)) / s.
