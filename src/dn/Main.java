@@ -26,6 +26,13 @@ public class Main {
 		System.out.println("");
 	}
 	
+	public static double arredondamento(double num) {
+		Double numArredondado = BigDecimal.valueOf(num)
+			    .setScale(2, RoundingMode.HALF_UP)
+			    .doubleValue();
+		return numArredondado;
+	}
+	
 	/** Método para calcular o PMI de uma classe, utilizando os dois limites, inferior e superior
 	 * 
 	 * @param li - é o parâmetro para o limite inferior 
@@ -36,7 +43,7 @@ public class Main {
 	 * 		retorna o PMI
 	 */
 	public static double calculoPMI(int li, int ls) {
-		double pmi = 0.5 * (li + ls);
+		double pmi = arredondamento((0.5 * (li + ls)));
 		return pmi;
 	}
 	
@@ -56,23 +63,23 @@ public class Main {
 			n += matriz[i][1]; // calculando o valor de N
 			xifi += matriz[i][0] * matriz[i][1]; // calculando o valor de xi*fi
 		}
-		media = xifi / n; //cálculo da média
+		media = arredondamento((xifi / n)); //cálculo da média
 
 		for (i = 0; i < matriz.length; i++) {
-			somaS2 += Math.pow((matriz[i][0] - media), 2) * matriz[i][1]; // cálculo da parte E(xi - media)^2 * fi
+			somaS2 += arredondamento((Math.pow((matriz[i][0] - media), 2) * matriz[i][1])); // cálculo da parte E(xi - media)^2 * fi
 		}
 		
-		s2 = somaS2 / (n-1); //cálculo da variância
-		s = Math.sqrt(s2); //cálculo do desvio padrão
-		cv = (100 * s) / media; //cálculo do coeficiente de variação
+		s2 = arredondamento((somaS2 / (n-1))); //cálculo da variância
+		s = arredondamento((Math.sqrt(s2))); //cálculo do desvio padrão
+		cv = arredondamento(((100 * s) / media)); //cálculo do coeficiente de variação
 		
-		System.out.println("N = " + n +";\nMédia = " + formatador.format(media) + ";\nVariância(s2) = " +formatador.format(s2) +
-				";\nDesvio padrão = " + formatador.format(s) + ";\nCoeficiente de Variação (CV) = " + formatador.format(cv) + "%"); //impressão de todos os resultados	
+		System.out.println("N = " + n +";\nMédia = " + media + ";\nVariância(s2) = " +s2 +
+				";\nDesvio padrão = " + s + ";\nCoeficiente de Variação (CV) = " + cv + "%"); //impressão de todos os resultados	
 	}
 	
 	
 	public static double calculoZ(double xi, double media, double n, double s) {
-		double Z = (xi - media) * Math.sqrt(n) / s;
+		double Z = arredondamento(((xi - media) * Math.sqrt(n) / s));
 		return Z;
 	}
 

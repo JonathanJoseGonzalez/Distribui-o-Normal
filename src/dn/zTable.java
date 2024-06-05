@@ -1,10 +1,15 @@
 package dn;
 
+import dn.Main;
+
 public class zTable {
+	
+	static double[][] tabela = new double[79][11];
 	
 	public static void main(String[] args) throws Exception {
 
 		double[][] zTable = {
+				//			Z		.00		.01		.02		.03			.04		.05		.06		.07		.08			.09
 				/*-3.9*/{ -3.9, 0.00005, 0.00005, 0.00004, 0.00004, 0.00004, 0.00004, 0.00004, 0.00004, 0.00003, 0.00003 },
 				/*-3.8*/{ -3.8, 0.00007, 0.00007, 0.00007, 0.00006, 0.00006, 0.00006, 0.00006, 0.00005, 0.00005, 0.00005 },
 				/*-3.7*/{ -3.7, 0.00011, 0.0001, 0.0001, 0.0001, 0.00009, 0.00009, 0.00008, 0.00008, 0.00008, 0.00008 },
@@ -85,6 +90,43 @@ public class zTable {
 				/* 3.7 */{ 3.7, 0.99989, 0.9999, 0.9999, 0.9999, 0.99991, 0.99991, 0.99992, 0.99992, 0.99992, 0.99992 },
 				/* 3.8 */{ 3.8, 0.99993, 0.99993, 0.99993, 0.99994, 0.99994, 0.99994, 0.99994, 0.99995, 0.99995, 0.99995 },
 				/* 3.9 */{ 3.9, 0.99995, 0.99995, 0.99996, 0.99996, 0.99996, 0.99996, 0.99996, 0.99996, 0.99997, 0.99997 } };
-
+				tabela = zTable;
+				
+				//testes dos valores pra ver se ta funcionando a separação das casas decimais
+//				double z = -0.0;
+//				String num = String.valueOf(z);
+//				int coluna = 0;
+//				double linha = 0;
+//				if(z < 0) {
+//					linha = Double.valueOf(num.substring(0, 4));
+//					if(num.length() == 5) {
+//						coluna = Integer.valueOf(num.substring(4, 5));
+//					}
+//				} else {
+//					linha = Double.valueOf(num.substring(0, 3));
+//					if(num.length() == 4) {
+//						coluna = Integer.valueOf(num.substring(3, 4));
+//					} 
+//				}
+//				
+//				System.out.println(linha);
+//				System.out.println(coluna);
 	}
+	
+//	public static double valorZ(double z) {
+//		int i = 0;
+//		String num = String.valueOf(z);
+//		double coluna = 0;
+//		double linha = Double.valueOf(num.substring(0, 3));
+//		if(num.length() == 4) {
+//			coluna = Double.valueOf(num.substring(3, 4));
+//		} 
+//
+//		for(i=0;i<tabela.length;i++) {
+//			if(linha == tabela[i][0]) {
+//				
+//			}
+//		}
+//	}
+
 }
