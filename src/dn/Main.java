@@ -16,7 +16,7 @@ import dn.zTable;
 public class Main {
 
 	static Scanner teclado = new Scanner(System.in);
-	static double xifi = 0, somaS2 = 0, media = 0, s2 = 0, s = 0, cv = 0, n = 0;
+	static double xifi = 0, somaS2 = 0, media = 0, s2 = 0, s = 0, cv = 0, n = 0; //variáveis para os cálculos estatísticos
 	static DecimalFormat formatador = new DecimalFormat("0.00");//formatação de valores
 
 
@@ -26,6 +26,11 @@ public class Main {
 		System.out.println("");
 	}
 	
+	/**
+	 * @author Arthur Renan
+	 * @param num - número double que vai ser arredondado
+	 * @return retorna o número arredondado
+	 */
 	public static double arredondamento(double num) {
 		Double numArredondado = BigDecimal.valueOf(num)
 			    .setScale(2, RoundingMode.HALF_UP)
@@ -34,13 +39,12 @@ public class Main {
 	}
 	
 	/** Método para calcular o PMI de uma classe, utilizando os dois limites, inferior e superior
-	 * 
+	 * @author Ruan Souza
 	 * @param li - é o parâmetro para o limite inferior 
 	 * 		
 	 * @param ls - é o parâmetro para o limite superior
 	 * 		
-	 * @return
-	 * 		retorna o PMI
+	 * @return retorna o PMI
 	 */
 	public static double calculoPMI(int li, int ls) {
 		double pmi = arredondamento((0.5 * (li + ls)));
@@ -53,6 +57,7 @@ public class Main {
 	 * 
 	 * Este método é usado tanto para (xi) quanto para classes
 	 * 
+	 * @author Arthur Renan
 	 * @param matriz - uma matriz double que contém os valores de dados e FI
 	 */
 	
@@ -77,14 +82,21 @@ public class Main {
 				";\nDesvio padrão = " + s + ";\nCoeficiente de Variação (CV) = " + cv + "%"); //impressão de todos os resultados	
 	}
 	
-	
+	/**
+	 * @author Ruan Souza
+	 * @param xi - o valor informado pelo usuário
+	 * @param media - media calculada
+	 * @param n - a soma dos FIs
+	 * @param s - desvio padrão
+	 * @return retorna o número z para ser procurado na zTable
+	 */
 	public static double calculoZ(double xi, double media, double n, double s) {
 		double Z = arredondamento(((xi - media) * Math.sqrt(n) / s));
 		return Z;
 	}
 
 	/** Método para imprimir qualquer matriz do programa
-	 * 
+	 * @author Arthur Renan
 	 * @param matriz - é uma matriz double que contém os valores dos dados e FI
 	 * @param qual - é um valor inteiro para decidir qual é o tipo da matriz
 	 */
@@ -116,7 +128,6 @@ public class Main {
 				System.out.println("[" + matriz[i][2] + "]---[" + matriz[i][3] + "]\t[" + matriz[i][0]+ "]\t[" + matriz[i][1] + "]");
 			}
 		}
-		calculoEstatistico(matriz); //chama o método para fazer os cálculos e imprimí-los aqui
 	}
 
 	// inserção de dados do usuário: dados e frequências individuais ou pelo menos
@@ -168,6 +179,7 @@ public class Main {
 				// mostrando os dados inseridos
 				
 				imprimeMatriz(dadosAmostrais, 1);
+				calculoEstatistico(dadosAmostrais); //chama o método para fazer os cálculos
 
 				System.out.print("\n Responda 1 para corrigir ou qualquer tecla para prosseguir: ");
 				resp = teclado.next().charAt(0);
@@ -199,7 +211,7 @@ public class Main {
 					// mostrando os dados inseridos
 					
 					imprimeMatriz(classes, 2);
-
+					calculoEstatistico(classes); //chama o método para fazer os cálculos
 					System.out.print("\nResponda 1 para corrigir ou qualquer tecla para prosseguir: ");
 					resp = teclado.next().charAt(0);
 				} while (resp == '1');
@@ -221,24 +233,25 @@ public class Main {
 		
 		quebraDeLinha();
 		
-		System.out.println("Digite o valor de A: ");
+		System.out.print("Digite o valor de A: ");
 		double a = teclado.nextDouble();
-		
+		double zScore = 0;
 		double zA = calculoZ(a, media, n , s);
-		
-		System.out.println("\nDigite [1] para inserir o valor de B, se desejar um intervalo, ou qualquer número para continuar: ");
+		zScore = zTable.valorZ(zA);
+		System.out.print("\nValor de Za: " + zA);
+		System.out.print("\nZa na tabela Z é = " + zScore);
+		System.out.println("\nDigite [1] para inserir o valor de B  se desejar um intervalo (A até B), ou qualquer número para continuar: ");
 		int x = teclado.nextInt();
 		
-		System.out.println("Valor de Z: " + formatador.format(zA));
-		
 		if(x == 1) {
-			System.out.println("Digite o valor de B: ");
+			System.out.print("\nDigite o valor de B: ");
 			double b = teclado.nextDouble();
 			
 			double zB = calculoZ(b, media, n , s);
 			
-			System.out.println("Valor de Z: " + formatador.format(zB));
-
+			System.out.print("\nValor de Zb: " + zB);
+			zScore = zTable.valorZ(zB);
+			System.out.print("\nZb na tabela Z é = " + zScore);
 		}
 		teclado.close();
 	}
