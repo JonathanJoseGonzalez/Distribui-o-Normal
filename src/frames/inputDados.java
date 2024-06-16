@@ -11,7 +11,11 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
+import java.util.Locale;
 
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,12 +33,15 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
-import javax.swing.JPanel;
+
+import classes.Calculos;
 
 public class inputDados {
 
 	private JFrame frInputDados;
 
+	private JTable tableCalculos;
+	
 	private JLabel lblXi;
 	private JLabel lblFi;
 	private JLabel lblSomaXi;
@@ -48,19 +56,20 @@ public class inputDados {
 	private JTextField txXi;
 	private JTextField txFi;
 	private JTextField txSomaXi;
-	private JTextField txSomaFi;
+	public static JTextField txSomaFi;
 	private JTextField txSomaXifi;
-	private JTextField txXbarra;
+	public static JTextField txXbarra;
 	private JTextField txSomaXiMediaQuadradoFi;
 	private JTextField txVariancia;
-	private JTextField txDesvioPadrao;
+	public static JTextField txDesvioPadrao;
 	private JTextField txCoeficienteDeVariacao;
 
 	private JButton btCalcular;
 	private JButton btCorrigir;
 	private JButton btApagar;
 	private JButton btLimparTela;
-
+	private JButton btInserir;
+	
 	DefaultTableModel modelCalculos;
 
 	Double xi = 0.0;
@@ -78,30 +87,41 @@ public class inputDados {
 	private JButton btnDistribuicaoNormal;
 	private JPanel panel;
 	private JLabel lblNewLabel;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JRadioButtonMenuItem rdbtnmntm1;
+	private JRadioButtonMenuItem rdbtnmntm2;
+	private JRadioButtonMenuItem rdbtnmntm3;
+	private JRadioButtonMenuItem rdbtnmntm4;
+	private JRadioButtonMenuItem rdbtnmntm5;
+	private JRadioButtonMenuItem rdbtnmntm6;
+	private JRadioButtonMenuItem rdbtnmntm0;
 
+	int casaDecimal = 2;	
+
+	
 	public static boolean ehNumero(String linha) {
 		try {
-			Double.parseDouble(linha);
+			Double.parseDouble(linha.replace(',', '.'));
 			return true;
 		} catch (NumberFormatException e) {
 			return false;
 		}
 	}
 
-	public double inserirXi(String valorXi) {
+	public Double inserirXi(String valorXi) {
 		String alterarXi = valorXi.replace(',', '.'); // Substituir a vírgula pelo ponto
 		xi = Double.parseDouble(alterarXi);
 		return (xi);
 	}
 
-	public double inserirFi(String valorFi) {
+	public Double inserirFi(String valorFi) {
 		String alterarFi = valorFi.replace(',', '.'); // Substituir a vírgula pelo ponto
 		fi = Double.parseDouble(alterarFi);
 		return (fi);
 	}
 
-	public double somaXi() {
-		double somaXi = 0.0;
+	public Double somaXi() {
+		Double somaXi = 0.0;
 
 		for (int i = 0; i < modelCalculos.getRowCount(); i++) {
 			somaXi += Double.parseDouble(modelCalculos.getValueAt(i, 0).toString());
@@ -110,8 +130,8 @@ public class inputDados {
 		return somaXi;
 	}
 
-	public double somaFi() {
-		double somaFi = 0.0;
+	public Double somaFi() {
+		Double somaFi = 0.0;
 
 		for (int i = 0; i < modelCalculos.getRowCount(); i++) {
 			somaFi += ((Double) modelCalculos.getValueAt(i, 1));
@@ -120,8 +140,8 @@ public class inputDados {
 		return somaFi;
 	}
 
-	public double somaXiFi() {
-		double somaXiFi = 0.0;
+	public Double somaXiFi() {
+		Double somaXiFi = 0.0;
 
 		for (int i = 0; i < modelCalculos.getRowCount(); i++) {
 			somaXiFi += ((Double) modelCalculos.getValueAt(i, 2));
@@ -130,14 +150,14 @@ public class inputDados {
 		return somaXiFi;
 	}
 
-	public double media() {
-		double media = 0.0;
-		media = somaXiFi()/somaFi();
+	public Double media() {
+		Double media = 0.0;
+		Calculos.arredondamento(media = somaXiFi()/somaFi(), casaDecimal);
 		return media;
 	}
 
-	public double somaXiMediaQuadradoFi() {
-		double somaXiMediaQuadradoFi = 0.0;
+	public Double somaXiMediaQuadradoFi() {
+		Double somaXiMediaQuadradoFi = 0.0;
 
 		for (int i = 0; i < modelCalculos.getRowCount(); i++) {
 			somaXiMediaQuadradoFi += Double.parseDouble(modelCalculos.getValueAt(i, 3).toString().replace(',', '.'));
@@ -146,25 +166,45 @@ public class inputDados {
 		return somaXiMediaQuadradoFi;
 	}
 
-	public double xiMediaQuadradoFi(double xi, double fi) {
-		double xiMediaQuadradoFi = 0.0;
-		double media = Double.parseDouble(txXbarra.getText().replace(',', '.'));
-		xiMediaQuadradoFi = Math.pow((xi - media), 2) * fi;
+	public Double xiMediaQuadradoFi(double xi, double fi) {
+		Double xiMediaQuadradoFi = 0.0;
+		Double media = Double.parseDouble(txXbarra.getText().replace(',', '.'));
+		Calculos.arredondamento((xiMediaQuadradoFi = Math.pow((xi - media), 2) * fi), casaDecimal);
 
 		return xiMediaQuadradoFi;
 	}
 
+	public void Limpar() {
+		modelCalculos.setRowCount(0);
+		atualizarCalculos();
+		ativarDistribuicaoNormal();
+		txXi.setText("");
+		txFi.setText("");
+		tableCalculos.clearSelection();
+		btInserir.setEnabled(true);
+		btCorrigir.setEnabled(true);
+		btApagar.setEnabled(true);
+
+		txXbarra.setText("0,00");
+		txSomaXiMediaQuadradoFi.setText("0,00");
+		txVariancia.setText("0,00");
+		txDesvioPadrao.setText("0,00");
+		txCoeficienteDeVariacao.setText("0,00 %");
+	}
+	
 	public void atualizarCalculos() {
 		somaXi();
 		somaFi();
 		somaXiFi();
 
-		txSomaFi.setText(String.format("%.2f", somaFi()));
-		txSomaXi.setText(String.format("%.2f", somaXi()));
-		txSomaXifi.setText(String.format("%.2f", somaXiFi()));
+		txSomaFi.setText(Calculos.arredondamento(somaFi(), casaDecimal).toString());
+		txSomaXi.setText(Calculos.arredondamento(somaXi(), casaDecimal).toString());
+		txSomaXifi.setText(Calculos.arredondamento(somaXiFi(), casaDecimal).toString());
 		
 	}
-	
+	/**
+	 * Método que mantém o botão btnDistribuicaoNormal desativado até que a tabela tableCalculostenha tenha ao menos 2 valores inseridos.
+	 */
 	public void ativarDistribuicaoNormal() {
 		
 		if (modelCalculos.getRowCount() <= 1) {
@@ -182,7 +222,8 @@ public class inputDados {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					System.out.println("Here we go again!");
+					System.out.println(Locale.getDefault());
+					System.out.println("Here we go again! - inputDados");
 					inputDados window = new inputDados();
 
 					window.frInputDados.setVisible(true);
@@ -217,12 +258,16 @@ public class inputDados {
 		frInputDados.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frInputDados.getContentPane().setLayout(null);
 
+		URL iconURL = getClass().getResource("/img/iconJCS.png");
+		ImageIcon icon = new ImageIcon(iconURL);
+		frInputDados.setIconImage(icon.getImage());
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
 		scrollPane.setBounds(10, 10, 549, 221);
 		frInputDados.getContentPane().add(scrollPane);
 
-		JTable tableCalculos = new JTable();
+		tableCalculos = new JTable();
 		tableCalculos.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		tableCalculos.addMouseListener(new MouseAdapter() {
 			@Override
@@ -323,7 +368,7 @@ public class inputDados {
 		frInputDados.getContentPane().add(lblVariancia);
 
 		lblDesvioPadrao = new JLabel("s: ");
-		lblDesvioPadrao.setToolTipText("É o desvio padrão!");
+		lblDesvioPadrao.setToolTipText("É o desvio padrão! √(s²)");
 		lblDesvioPadrao.setLabelFor(txDesvioPadrao);
 		lblDesvioPadrao.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblDesvioPadrao.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -466,11 +511,14 @@ public class inputDados {
 
 		//JButton
 		
-		JButton btInserir = new JButton("Inserir dados!");
+		btInserir = new JButton("Inserir dados!");
 		btInserir.setBackground(new Color(255, 255, 204));
 		btInserir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (txXi.getText().equals("") || txFi.getText().equals("")) {
+				System.out.println(txXi.getText());
+				System.out.println(txFi.getText());
+				
+				if (txXi.getText().equals(null) || txFi.getText().equals(null)) {
 					JOptionPane.showMessageDialog(null,
 							"Não esqueceu de nada não? \nVerifique se você digitou o [xi] e o [fi]!", "OPA!",
 							JOptionPane.WARNING_MESSAGE);
@@ -527,22 +575,22 @@ public class inputDados {
 						xi = (Double) (modelCalculos.getValueAt(i, 0));
 						fi = (Double) (modelCalculos.getValueAt(i, 1));
 						double res = xiMediaQuadradoFi(xi, fi);
-						modelCalculos.setValueAt(String.format("%.2f", res), i, 3);
+						modelCalculos.setValueAt(Calculos.arredondamento(res, casaDecimal), i, 3);
 					}
 
 					somaXiMediaQuadradoFi();
-					txSomaXiMediaQuadradoFi.setText(String.format("%.2f", somaXiMediaQuadradoFi()));
+					txSomaXiMediaQuadradoFi.setText(Calculos.arredondamento(somaXiMediaQuadradoFi(), casaDecimal).toString());
 
 					variancia = (Double.parseDouble(txSomaXiMediaQuadradoFi.getText().replace(',', '.')))
 							/ (somaFi() - 1);
-					txVariancia.setText(String.format("%.2f", variancia));
+					txVariancia.setText(Calculos.arredondamento(variancia, casaDecimal).toString());
 
 					desvioPadrao = Math.sqrt(Double.parseDouble(txVariancia.getText().replace(',', '.')));
-					txDesvioPadrao.setText(String.format("%.2f", desvioPadrao));
+					txDesvioPadrao.setText(Calculos.arredondamento(desvioPadrao, casaDecimal).toString());
 
 					coeficienteDeVariacao = 100 * Double.parseDouble(txDesvioPadrao.getText().replace(',', '.'))
 							/ media();
-					txCoeficienteDeVariacao.setText(String.format("%.2f", coeficienteDeVariacao));
+					txCoeficienteDeVariacao.setText(Calculos.arredondamento(coeficienteDeVariacao, casaDecimal).toString());
 					ativarDistribuicaoNormal();
 				}
 			}
@@ -656,21 +704,7 @@ public class inputDados {
 								"TEM CERTEZA?", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opcoes,
 								opcoes[0]);
 						if (confirmarDeNovo == 0) {
-							modelCalculos.setRowCount(0);
-							atualizarCalculos();
-							ativarDistribuicaoNormal();
-							txXi.setText("");
-							txFi.setText("");
-							tableCalculos.clearSelection();
-							btInserir.setEnabled(true);
-							btCorrigir.setEnabled(true);
-							btApagar.setEnabled(true);
-
-							txXbarra.setText("0,00");
-							txSomaXiMediaQuadradoFi.setText("0,00");
-							txVariancia.setText("0,00");
-							txDesvioPadrao.setText("0,00");
-							txCoeficienteDeVariacao.setText("0,00 %");
+							Limpar();
 						}
 					}
 				}
@@ -686,7 +720,7 @@ public class inputDados {
 		btnDistribuicaoNormal.setEnabled(false);
 		btnDistribuicaoNormal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frames.distribuicaoNormal.main(null); // invoca a tela "distribuicaoNormal"
+				frames.distribuicaoNormal.main(null); // Abre a tela "distribuicaoNormal"
 			}
 		});
 		btnDistribuicaoNormal.setBounds(89, 580, 470, 40);
@@ -703,7 +737,7 @@ public class inputDados {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel.setBounds(10, 10, 375, 13);
 		panel.add(lblNewLabel);
-		frInputDados.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txXi, txFi, btInserir, btnDistribuicaoNormal, panel, lblNewLabel}));
+		frInputDados.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txXi, txFi, btInserir}));
 
 		menuBar = new JMenuBar();
 		frInputDados.setJMenuBar(menuBar);
@@ -721,6 +755,81 @@ public class inputDados {
 		rdbtnmntmClasses.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		mnInsercaoDeDados.add(rdbtnmntmClasses);
 		
+		JMenu mnCasasDecimais = new JMenu("Casas Decimais");
+		mnCasasDecimais.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		menuBar.add(mnCasasDecimais);
+		
+		rdbtnmntm0 = new JRadioButtonMenuItem("0 - 0");
+		rdbtnmntm0.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				casaDecimal = 0;
+			}
+		});
+		buttonGroup.add(rdbtnmntm0);
+		rdbtnmntm0.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		mnCasasDecimais.add(rdbtnmntm0);
+		
+		rdbtnmntm1 = new JRadioButtonMenuItem("1 - 0,0");
+		rdbtnmntm1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				casaDecimal = 1;
+			}
+		});
+		buttonGroup.add(rdbtnmntm1);
+		rdbtnmntm1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		mnCasasDecimais.add(rdbtnmntm1);
+		
+		rdbtnmntm2 = new JRadioButtonMenuItem("2 - 0,00");
+		rdbtnmntm1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				casaDecimal = 2;
+			}
+		});
+		rdbtnmntm2.setSelected(true);
+		buttonGroup.add(rdbtnmntm2);
+		rdbtnmntm2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		mnCasasDecimais.add(rdbtnmntm2);
+		
+		rdbtnmntm3 = new JRadioButtonMenuItem("3 - 0,000");
+		rdbtnmntm1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				casaDecimal = 3;
+			}
+		});
+		buttonGroup.add(rdbtnmntm3);
+		rdbtnmntm3.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		mnCasasDecimais.add(rdbtnmntm3);
+		
+		rdbtnmntm4 = new JRadioButtonMenuItem("4 - 0,0000");
+		rdbtnmntm1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				casaDecimal = 4;
+			}
+		});
+		buttonGroup.add(rdbtnmntm4);
+		rdbtnmntm4.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		mnCasasDecimais.add(rdbtnmntm4);
+		
+		rdbtnmntm5 = new JRadioButtonMenuItem("5 - 0,00000");
+		rdbtnmntm1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				casaDecimal = 5;
+			}
+		});
+		buttonGroup.add(rdbtnmntm5);
+		rdbtnmntm5.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		mnCasasDecimais.add(rdbtnmntm5);
+		
+		rdbtnmntm6 = new JRadioButtonMenuItem("6 - 0,000000");
+		rdbtnmntm1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				casaDecimal = 6;
+			}
+		});
+		buttonGroup.add(rdbtnmntm6);
+		rdbtnmntm6.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		mnCasasDecimais.add(rdbtnmntm6);
+		
 		JMenu mnAjuda = new JMenu("Ajuda???");
 		mnAjuda.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		menuBar.add(mnAjuda);
@@ -733,6 +842,8 @@ public class inputDados {
 		});
 		mntmCalculos.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		mnAjuda.add(mntmCalculos);
-		frInputDados.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txXi, txFi, btInserir, rdbtnmntmXi, rdbtnmntmClasses, mnAjuda, mntmCalculos, btnDistribuicaoNormal, panel, lblNewLabel}));
+		frInputDados.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txXi, txFi, btInserir}));
+		
 	}
+
 }
