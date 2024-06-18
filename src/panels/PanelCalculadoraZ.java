@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import classes.Calculos;
-import frames.inputDados;
+import frames.mainEstatistica;
 import frames.zTable;
 
 public class PanelCalculadoraZ extends JPanel {
@@ -67,13 +67,26 @@ public class PanelCalculadoraZ extends JPanel {
 		
 		public void importarDados() {
 			try {
-				String media = inputDados.txXbarra.getText();
-				String N = inputDados.txSomaFi.getText().replace(".0","");
-				String desvioPadrao = inputDados.txDesvioPadrao.getText();
-				
-				txPMedia.setText(media);
-				txPN.setText(N);
-				txPdesvioPadrao.setText(desvioPadrao);
+				String media;
+				String N;
+				String desvioPadrao;
+				if (mainEstatistica.rdbtnmntmXi.isSelected()) {
+					media = panelInputDados.txXbarra.getText();
+					N = panelInputDados.txSomaFi.getText();
+					desvioPadrao = panelInputDados.txDesvioPadrao.getText();
+					
+					txPMedia.setText(media);
+					txPN.setText(N);
+					txPdesvioPadrao.setText(desvioPadrao);
+				} else {
+					media = panelInputClasses.txXbarra.getText();
+					N = panelInputClasses.txSomaFi.getText();
+					desvioPadrao = panelInputClasses.txDesvioPadrao.getText();
+					
+					txPMedia.setText(media);
+					txPN.setText(N);
+					txPdesvioPadrao.setText(desvioPadrao);
+				}
 			} catch (NullPointerException err) {
 				JOptionPane.showMessageDialog(null,
 					"<html>Atenção! <br>"
@@ -149,6 +162,7 @@ public class PanelCalculadoraZ extends JPanel {
 			txPXi.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			txPXi.setColumns(10);
 			txPXi.setBounds(180, 60, 160, 40);
+			txPXi.setBackground(new Color(255, 255, 204));
 			this.add(txPXi);
 			
 			txPMedia = new JTextField();
@@ -162,6 +176,7 @@ public class PanelCalculadoraZ extends JPanel {
 			txPMedia.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			txPMedia.setColumns(10);
 			txPMedia.setBounds(180, 110, 160, 40);
+			txPMedia.setBackground(new Color(255, 255, 204));
 			this.add(txPMedia);
 			
 			txPN = new JTextField();
@@ -175,6 +190,7 @@ public class PanelCalculadoraZ extends JPanel {
 			txPN.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			txPN.setColumns(10);
 			txPN.setBounds(180, 160, 160, 40);
+			txPN.setBackground(new Color(255, 255, 204));
 			this.add(txPN);
 			
 			txPdesvioPadrao = new JTextField();
@@ -188,6 +204,7 @@ public class PanelCalculadoraZ extends JPanel {
 			txPdesvioPadrao.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			txPdesvioPadrao.setColumns(10);
 			txPdesvioPadrao.setBounds(180, 210, 160, 40);
+			txPdesvioPadrao.setBackground(new Color(255, 255, 204));
 			this.add(txPdesvioPadrao);
 	
 			txValorZ = new JTextField();
@@ -196,6 +213,7 @@ public class PanelCalculadoraZ extends JPanel {
 			txValorZ.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			txValorZ.setColumns(10);
 			txValorZ.setBounds(180, 261, 160, 40);
+			txValorZ.setBackground(new Color(255, 204, 153));
 			this.add(txValorZ);
 			
 			txValorZxi = new JTextField();
@@ -204,6 +222,7 @@ public class PanelCalculadoraZ extends JPanel {
 			txValorZxi.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			txValorZxi.setColumns(10);
 			txValorZxi.setBounds(180, 310, 160, 40);
+			txValorZxi.setBackground(new Color(255, 204, 153));
 			this.add(txValorZxi);
 			
 			//Calculadora Z JButton
@@ -245,6 +264,7 @@ public class PanelCalculadoraZ extends JPanel {
 			});
 			btnCalcular.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			btnCalcular.setBounds(10, 360, 330, 40);
+			btnCalcular.setBackground(new Color(255, 255, 204));
 			this.add(btnCalcular);
 			
 			//Calculadora Z JButton
@@ -256,6 +276,7 @@ public class PanelCalculadoraZ extends JPanel {
 			});
 			btnImportarResultados.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			btnImportarResultados.setBounds(10, 410, 330, 40);
+			btnImportarResultados.setBackground(new Color(255, 204, 153));
 			this.add(btnImportarResultados);
 			
 			btnLimpar = new JButton("Limpar!");
@@ -279,6 +300,7 @@ public class PanelCalculadoraZ extends JPanel {
 			});
 			btnLimpar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			btnLimpar.setBounds(10, 460, 330, 40);
+			btnLimpar.setBackground(new Color(255, 204, 153));
 			add(btnLimpar);
 			
 			setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txPXi, txPMedia, txPN, txPdesvioPadrao, btnCalcular, btnImportarResultados, btnLimpar}));

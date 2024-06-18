@@ -13,7 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.Toolkit;
+import javax.swing.SwingConstants;
 
 
 public class Inicio {
@@ -66,9 +66,10 @@ public class Inicio {
 		frInicio.setIconImage(icon.getImage());
 
 		
-		JLabel lblInicio = new JLabel("<html>\r\n<body>\r\n<h2>Estatística JCS</h2>\r\n<p>Desenvolvido por:</p>\r\n<h4>ARTHUR RENAN GUTIERREZ DIAS PEREIRA</h4>\r\n<h4>JONATHAN JOSE GONZALEZ</h4>\r\n<h4>PATRICK HIROSHI KATSUTA</h4>\r\n<h4>RUAN VITOR SANTOS DE SOUZA</h4>\r\n<br>\r\n<p>Sob supervisão de:</p>\r\n<h4>JOÃO CARLOS DOS SANTOS</h4>\r\n</body>\r\n</html>");
+		JLabel lblInicio = new JLabel("<html>\r\n<body>\r\n<h2 style=\"text-align: right;\">Estatística JCS</h2>\r\n<p style=\"text-align: right;\">Desenvolvido por:</p>\r\n<h4 style=\"text-align: right;\">ARTHUR RENAN GUTIERREZ DIAS PEREIRA</h4>\r\n<h4 style=\"text-align: right;\">JONATHAN JOSE GONZALEZ</h4>\r\n<h4 style=\"text-align: right;\">PATRICK HIROSHI KATSUTA</h4>\r\n<h4 style=\"text-align: right;\">RUAN VITOR SANTOS DE SOUZA</h4>\r\n<br>\r\n<p style=\"text-align: right;\">Sob supervisão de:</p>\r\n<h4 style=\"text-align: right;\">JOÃO CARLOS DOS SANTOS</h4>\r\n</body>\r\n</html>");
+		lblInicio.setHorizontalAlignment(SwingConstants.LEFT);
 		lblInicio.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		lblInicio.setBounds(10, 10, 551, 256);
+		lblInicio.setBounds(299, 10, 262, 270);
 		frInicio.getContentPane().add(lblInicio);
 		
 		JPanel panel = new JPanel();
@@ -95,9 +96,14 @@ public class Inicio {
 		btnCalculadoraZ.setBackground(new Color(255, 255, 204));
 		btnCalculadoraZ.setBounds(10, 60, 531, 40);
 		panel.add(btnCalculadoraZ);
+		
+		JLabel lblJC = new JLabel("");
+		lblJC.setBounds(10, 10, 279, 270);
+		frInicio.getContentPane().add(lblJC);
+		lblJC.setIcon(new ImageIcon(Inicio.class.getResource("/img/icon3.png")));
 		btnIniciar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frames.inputDados.main(null);
+				frames.mainEstatistica.main(null);
 				frInicio.dispose();
 			}
 		});
